@@ -8,16 +8,13 @@ yum -y update
 yum -y install tcpdump nano wget
 
 # Grab the Remi repo and enable
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+rpm -Uvh epel-release-7*.rpm
 wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 rpm -Uvh remi-release-7*.rpm
 sed -i -e '/\[remi\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
 sed -i -e '/\[remi-php56\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
-rm remi-release-7*
-
-# Epel??
-#wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
-#rpm -Uvh remi-release-7*.rpm epel-release-7*.rpm
-#rm epel-release-7-9.noarch.rpm remi-release-7.rpm
+rm epel-release-7-9.noarch.rpm remi-release-7.rpm
 
 # Install PHP and extensions
 yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml
@@ -52,3 +49,19 @@ EOL
 systemctl restart httpd.service
 
 # To be continued...
+
+### Permissions, ownership, selinux contexts set
+### Then maybe php app/nut setup: sync again??
+
+
+### Is it necessary to chown everything to apache?? with the sticky bit??
+#sudo chcon -t httpd_sys_rw_content_t /var/www/bolt -R
+
+#chmod -R 777 app/cache/ app/config/ app/database/ extensions/
+#chmod -R 777 public/thumbs/ public/extensions/ public/files/ public/theme/
+
+
+
+
+
+
