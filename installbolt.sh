@@ -7,7 +7,7 @@
 yum -y update
 yum -y install tcpdump nano wget
 
-# Grab the Remi repo and enable
+# Grab the Remi and Epel repos and enable
 wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
 rpm -Uvh epel-release-7*.rpm
 wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
