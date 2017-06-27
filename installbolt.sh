@@ -26,13 +26,15 @@ firewall-cmd --reload
 systemctl start httpd
 systemctl start httpd.service
 
-# Grab bolt and install
+# Grab bolt, install, fix selinux
 mkdir /var/www/bolt
+chown apache:apache /var/www/bolt
 cd /var/www/bolt
-curl -O https://bolt.cm/distribution/bolt-latest.tar.gz
-tar -xzf bolt-latest.tar.gz --strip-components=1
+sudo -u apache curl -O https://bolt.cm/distribution/bolt-latest.tar.gz
+sudo -u apache tar -xzf bolt-latest.tar.gz --strip-components=1
+sudo -u apache php /var/www/bolt/app/nut setup:sync
 rm bolt-latest.tar.gz
-php app/nut setup:sync
+chcon -t httpd_sys_rw_content_t /var/www/bolt/ -R
 
 # Add bolt virtualhost and restart Apache
 cat > /etc/httpd/conf.d/bolt.conf << EOL
@@ -47,21 +49,4 @@ cat > /etc/httpd/conf.d/bolt.conf << EOL
 </VirtualHost>
 EOL
 systemctl restart httpd.service
-
-# To be continued...
-
-### Permissions, ownership, selinux contexts set
-### Then maybe php app/nut setup: sync again??
-
-
-### Is it necessary to chown everything to apache?? with the sticky bit??
-#sudo chcon -t httpd_sys_rw_content_t /var/www/bolt -R
-
-#chmod -R 777 app/cache/ app/config/ app/database/ extensions/
-#chmod -R 777 public/thumbs/ public/extensions/ public/files/ public/theme/
-
-
-
-
-
 
