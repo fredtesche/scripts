@@ -16,8 +16,8 @@ sed -i -e '/\[remi\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
 sed -i -e '/\[remi-php56\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
 rm epel-release-7-9.noarch.rpm remi-release-7.rpm
 
-# Install PHP and extensions
-yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml
+# Install PHP, extensions, sql, and phpmyadmin
+yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml mysql phpmyadmin
 
 # Configure the firewall and enable httpd
 firewall-cmd --permanent --zone=public --add-service=http
