@@ -19,12 +19,14 @@ rm epel-release-7-9.noarch.rpm remi-release-7.rpm
 # Install PHP, extensions, mariadb, and phpmyadmin
 yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml mariadb phpmyadmin
 
-# Configure the firewall and enable httpd
+# Configure the firewall and enable httpd and mariadb
 firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --permanent --zone=public --add-service=https
 firewall-cmd --reload
-systemctl start httpd
+systemctl enable httpd.service
 systemctl start httpd.service
+systemctl enable mariadb.service
+systemctl start mariadb.service
 
 # Grab bolt, install, fix selinux
 mkdir /var/www/bolt
