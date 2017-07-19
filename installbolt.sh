@@ -8,7 +8,7 @@ yum -y update
 yum -y install tcpdump nano wget
 
 # Grab the Remi and Epel repos and enable
-wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 rpm -Uvh epel-release-7*.rpm
 wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 rpm -Uvh remi-release-7*.rpm
@@ -16,10 +16,12 @@ sed -i -e '/\[remi\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
 sed -i -e '/\[remi-php56\]/,/^\[/s/enabled=0/enabled=1/' /etc/yum.repos.d/remi.repo
 rm epel-release-7-9.noarch.rpm remi-release-7.rpm
 
-# Install PHP, extensions, mariadb, and phpmyadmin
-yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml mariadb phpmyadmin
+# Install PHP, extensions, mariadb server, firewall, and phpmyadmin
+yum -y install php php-pdo php-mysqlnd php-pgsql php-gd php-mbstring php-posix php-xml mariadb mariadb-server firewalld phpmyadmin
 
 # Configure the firewall and enable httpd and mariadb
+systemctl enable firewalld
+systemctl start firewalld
 firewall-cmd --permanent --zone=public --add-service=http
 firewall-cmd --permanent --zone=public --add-service=https
 firewall-cmd --reload
