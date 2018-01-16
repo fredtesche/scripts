@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### This script will spin up a vyOS VM pretty quickly.
-### Fred Tesche At Fake Computer Music Dot Com 2018
+### Fred Tesche 2017 fred@fakecomputermusic.com
 
 if [ $# -eq 0 ]; then
 	echo "No .iso file specified. Enter URL to grab a freshie: "
