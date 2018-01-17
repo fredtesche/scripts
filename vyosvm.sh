@@ -40,11 +40,11 @@ VBoxManage modifyvm $vmName --nic1 bridged --bridgeadapter1 en0
 VBoxManage modifyvm $vmName --audio none
 
 ### Fire it up
-VBoxManage startvm $vmName --type headless
-#VBoxManage startvm $vmName
+#VBoxManage startvm $vmName --type headless
+VBoxManage startvm $vmName
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c
 echo "Waiting a little bit for the machine to finish booting..."
-sleep 45
+sleep 40
 
 #type vyos for username and password
 VBoxManage controlvm $vmName keyboardputscancode 2f af #v
@@ -71,14 +71,21 @@ vBoxManage controlvm $vmName keyboardputscancode 1e 9e #a
 vBoxManage controlvm $vmName keyboardputscancode 22 a2 #g
 vBoxManage controlvm $vmName keyboardputscancode 12 92 #e
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 15 95 #y
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 5
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 VBoxManage controlvm $vmName keyboardputscancode 2f af #v
 VBoxManage controlvm $vmName keyboardputscancode 15 95 #y
 VBoxManage controlvm $vmName keyboardputscancode 18 98 #o
@@ -89,6 +96,7 @@ VBoxManage controlvm $vmName keyboardputscancode 15 95 #y
 VBoxManage controlvm $vmName keyboardputscancode 18 98 #o
 VBoxManage controlvm $vmName keyboardputscancode 1f 9f #s
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+sleep 1
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
 VBoxManage controlvm $vmName keyboardputscancode 19 99 #p
 VBoxManage controlvm $vmName keyboardputscancode 18 98 #o
@@ -102,4 +110,28 @@ vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
 VBoxManage controlvm $vmName keyboardputscancode 15 95 #y
 vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
 
-### todo: Unmount install iso, Reboot, Login, give first interface an IP, then ssh in.
+### Wait a little bit for shutdown
+sleep 20
+
+### Remove the install iso, reboot
+vBoxManage storageattach $vmName --storagectl "SATA" --port 0 --device 0 --type dvddrive --medium none
+
+### Fire it up
+#VBoxManage startvm $vmName --type headless
+VBoxManage startvm $vmName
+echo "Waiting for VM to reboot..."
+sleep 60
+
+#type vyos for username and password
+VBoxManage controlvm $vmName keyboardputscancode 2f af #v
+VBoxManage controlvm $vmName keyboardputscancode 15 95 #y
+VBoxManage controlvm $vmName keyboardputscancode 18 98 #o
+VBoxManage controlvm $vmName keyboardputscancode 1f 9f #s
+vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+VBoxManage controlvm $vmName keyboardputscancode 2f af #v
+VBoxManage controlvm $vmName keyboardputscancode 15 95 #y
+VBoxManage controlvm $vmName keyboardputscancode 18 98 #o
+VBoxManage controlvm $vmName keyboardputscancode 1f 9f #s
+vBoxManage controlvm $vmName keyboardputscancode 1c 9c #enter
+
+### todo: Give first interface an IP, then ssh in.
