@@ -30,10 +30,10 @@ xmldata = getFile(url)
 
 # Parse the XML file
 doc = etree.fromstring(xmldata)
-btags = doc.xpath("//products/product/addresslist[@type='IPv4']/address")
+xmlRef = doc.xpath("//products/product/addresslist[@type='IPv4']/address")
 print("object-group network Office365_IPs")
-for b in btags:
-	cidr = unicode(b.text)
+for i in xmlRef:
+	cidr = unicode(i.text)
 	address = ipaddress.ip_network(cidr).network_address
 	netmask = ipaddress.ip_network(cidr).netmask
 	address = str(address)
