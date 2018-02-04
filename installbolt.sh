@@ -61,7 +61,6 @@ cat > /etc/httpd/conf.d/phpMyAdmin.conf << EOL
 # But allowing phpMyAdmin to anyone other than localhost should be considered
 # dangerous unless properly secured by SSL
 
-Alias /phpMyAdmin /usr/share/phpMyAdmin
 Alias /phpmyadmin /usr/share/phpMyAdmin
 
 <Directory /usr/share/phpMyAdmin/>
