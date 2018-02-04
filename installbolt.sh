@@ -36,6 +36,7 @@ cd /var/www/bolt
 sudo -u apache curl -O https://bolt.cm/distribution/bolt-latest.tar.gz
 sudo -u apache tar -xzf bolt-latest.tar.gz --strip-components=1
 sudo -u apache php /var/www/bolt/app/nut setup:sync
+sudo -u apache php /var/www/bolt/app/nut init
 rm bolt-latest.tar.gz
 chcon -t httpd_sys_rw_content_t /var/www/bolt/ -R
 
