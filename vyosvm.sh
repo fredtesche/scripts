@@ -20,7 +20,7 @@ fi
 ### Set some handy variables
 echo "Enter a name for this vyOS VM: "
 read vmName
-vmFolder="$(VBoxManage list systemproperties | grep "Default machine folder:" | awk '{ print$4 }')"
+vmFolder="$(VBoxManage list systemproperties | grep "Default machine folder:" | awk '{ print$4" "$5 }')"
 vmFullPath="$vmFolder/$vmName"
 
 ### Create the VM and primary storage
