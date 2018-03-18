@@ -17,13 +17,13 @@ permit = [
 ]
 
 svc_object_type = [
-	'icmp',
-	'icmp6',
+    'icmp',
+    'icmp6',
     'ip',
     'object',
-	'object-group',
-	'tcp',
-	'udp'
+    'object-group',
+    'tcp'
+    'udp'
 ]
 
 net_object_type = [	
