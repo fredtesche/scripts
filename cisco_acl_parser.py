@@ -20,7 +20,7 @@ svc_object_type = [
 	'icmp',
 	'icmp6',
     'ip',
-    'object',
+    s'object',
 	'object-group',
 	'tcp',
 	'udp'
