@@ -80,9 +80,9 @@ def process_files():
                 line = validate_net_object(line, net_object_type, "Invalid destination")
                 line = validate(line, operator, "Invalid operator.")
                 
-                
-				# If any line returned anything, it is invalid
-                # Otherwise, it is valid
+
+                # If anything is returned, the line is invalid
+                # Otherwise, it is probably valid.
                 if line: invalid_lines.append(orig_list[i])
                 elif not line: valid_lines.append(orig_list[i])
                 
