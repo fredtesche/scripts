@@ -98,7 +98,7 @@ def process_files():
             for p in invalid_lines: print("* " + p)
             print("")
 
-
+# Validate various stuff
 def validate(line, val_list, error):
     if line.startswith(tuple(val_list)):
         for p in val_list:
@@ -108,6 +108,7 @@ def validate(line, val_list, error):
     else: line = error
     return line
 
+# Validate service objects. Needs more complex parsing, oh boy.
 def validate_svc_object(line, val_list, error):
     if line.startswith(tuple(val_list)):
         for p in val_list:
@@ -117,6 +118,7 @@ def validate_svc_object(line, val_list, error):
     else: line = error
     return line
 
+# Validate network objects
 def validate_net_object(line, val_list, error):
     if line.startswith(tuple(val_list)):
         for p in val_list:
@@ -150,7 +152,7 @@ def validate_net_object(line, val_list, error):
                 firstword = line.strip()
                 firstword = line.split(' ')[0] # Extract the first word
                 if firstword == "host":
-                    if line: #If there's anything left to chomp
+                    if line: # Is there anything left to eat
                         line = line[len(line.split(' ')[0]):].strip() # Split out the next word, whatever it is
                         address = line.strip()
                         address = line.split(' ')[0] # Extract the first word
@@ -173,7 +175,7 @@ def validate_net_object(line, val_list, error):
     elif not line.startswith(tuple(val_list)): # Then it's probably a network
         address = line.strip()
         address = line.split(' ')[0] # Extract the first word
-        if line: #If there's anything left to chomp
+        if line: # Is there anything left to eat
             line = line[len(line.split(' ')[0]):].strip() # Split out the next word, whatever it is
             netmask = line.strip()
             netmask = line.split(' ')[0] # Extract the first word
@@ -187,6 +189,6 @@ def validate_net_object(line, val_list, error):
                 line = error + ": IP network address invalid."
                 return line
         else: line = error + ": No netmask."
-        return line # Funtion is not returning the next thing to be processes. it is eating everything.
+        return line
     else: line = error
     return line
