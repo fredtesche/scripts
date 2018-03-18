@@ -19,8 +19,8 @@ permit = [
 svc_object_type = [
 	'icmp',
 	'icmp6',
-	'ip',
-	'object',
+    'ip',
+    'object',
 	'object-group',
 	'tcp',
 	'udp'
@@ -29,8 +29,8 @@ svc_object_type = [
 net_object_type = [	
     'any',
     'any4',
-	'any6',
-	'host',
+    'any6',
+    'host',
     'interface',
     'object',
     'object-group'
