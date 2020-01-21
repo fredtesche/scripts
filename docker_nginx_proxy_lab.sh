@@ -1,4 +1,4 @@
-# This is a handy script to setup a web server proxy lab on CentOS 8
+# This is a handy script to setup a web server proxy lab on CentOS 7/8
 # https://github.com/jwilder/nginx-proxy
 
 # Install stuff
