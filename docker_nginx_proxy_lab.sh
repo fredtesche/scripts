@@ -63,4 +63,3 @@ docker run -d --name serverc --expose 80 \
 -v serverc_html:/usr/share/nginx/html \
 -e VIRTUAL_HOST=serverc.com \
 --restart unless-stopped nginx
-
