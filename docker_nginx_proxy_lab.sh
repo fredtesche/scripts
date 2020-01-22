@@ -6,7 +6,7 @@
 yum -y update
 yum -y install epel-release
 yum -y update
-yum -y install git nano nginx nmap tcpdump wget
+yum -y install git nano nmap tcpdump wget
 yum -y install yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum -y update
