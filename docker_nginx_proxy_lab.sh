@@ -38,8 +38,29 @@ firewall-cmd --permanent --zone=trusted --change-interface=br0
 firewall-cmd --reload
 
 # Start the proxy container and some arbitrary nginx boxes for testing/exampls
-
 docker run --name proxy -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --network=br0 --ip 10.10.10.2 --restart unless-stopped jwilder/nginx-proxy
-docker run -d --name servera --expose 80 --network=br0 --ip 10.10.10.10 -e VIRTUAL_HOST=servera.com --restart unless-stopped nginx
-docker run -d --name serverb --expose 80 --network=br0 --ip 10.10.10.11 -e VIRTUAL_HOST=serverb.com --restart unless-stopped nginx
-docker run -d --name serverc --expose 80 --network=br0 --ip 10.10.10.12 -e VIRTUAL_HOST=serverc.com --restart unless-stopped nginx
+
+# Create some volumes for some containers
+docker volume create servera_html
+docker volume create serverb_html
+docker volume create serverc_html
+
+# Start these containers
+docker run -d --name servera --expose 80 \
+--network=br0 --ip 10.10.10.10 \
+-v servera_html:/usr/share/nginx/html \
+-e VIRTUAL_HOST=servera.com \
+--restart unless-stopped nginx
+
+docker run -d --name serverb --expose 80 \
+--network=br0 --ip 10.10.10.11 \
+-v serverb_html:/usr/share/nginx/html \
+-e VIRTUAL_HOST=serverb.com \
+--restart unless-stopped nginx
+
+docker run -d --name serverc --expose 80 \
+--network=br0 --ip 10.10.10.12 \
+-v serverc_html:/usr/share/nginx/html \
+-e VIRTUAL_HOST=serverc.com \
+--restart unless-stopped nginx
+
