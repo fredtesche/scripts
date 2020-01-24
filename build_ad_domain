@@ -1,0 +1,60 @@
+# Steps to build out an Active Directory domain on Server Core for Fake Computer Music Corporate
+#
+# dc1.corp.fakecomputermusic.com is a DC/DNS/DHCP
+# esxi.corp.fakecomputermusic.com is an ESXi server that hosts everything
+#
+# The network is 10.10.10.0/24
+# dc1.corp.fakecomputermusic.com is 10.10.10.4
+# GW addr is 10.10.10.1
+#
+# Outside DNS is *.fakecomputermusic.com
+# Inside DNS is corp.fakecomputermusic.com because split horizon is often a huge pain in the ass
+#
+# After installing Server Core 2016, use sconfig to configure networking, hostname, management, updates, etc.
+# Then do the rest of this stuff to configure dc1.corp.fakecomputermusic.com.
+ 
+# Install Active Directory
+Install-WindowsFeature -Name AD-Domain-Services
+ 
+# Setup the "corp.fakecomputermusic.com" domain with "fcm" netbios name because netbios has a character limit. Also DNS.
+Install-ADDSForest -ForestMode WinThreshold -DomainMode WinThreshold -DomainName corp.fakecomputermusic.com -DomainNetbiosName fcm
+ 
+# Set DNS forwarder to onedotone
+Set-DnsServerForwarder -IPAddress "1.1.1.1" -PassThru
+ 
+# Create reverse lookup zone
+Add-DnsServerPrimaryZone -NetworkID "10.10.10.0/24" -ReplicationScope "Forest"
+  
+# Install DHCP server
+Install-WindowsFeature -Name DHCP -IncludeManagementTools
+  
+# Add DHCP range 10.10.10.0/24
+Add-DHCPServerv4Scope -Name "FCMnet" -StartRange 10.10.10.1 -EndRange 10.10.10.254 -SubnetMask 255.255.255.0 -State Active
+  
+# Add DHCP exclusion 10.10.10.1-10
+Add-DHCPserverv4ExclusionRange -ScopeId 10.10.10.0 -StartRange 10.10.10.1 -EndRange 10.10.10.10
+ 
+# Set DNS search domain corp.fakecomputermusic.com, DNS server 10.10.10.4, and router addr 10.10.10.1
+Set-DHCPServerv4OptionValue -ScopeID 10.10.10.0 -DnsDomain corp.fakecomputermusic.com -DnsServer 10.10.10.4 -Router 10.10.10.1
+  
+# Authorize this DHCP server in AD
+Add-DHCPServerInDC -DnsName corp.fakecomputermusic.com -IPAddress 10.10.10.4
+ 
+# Create A and PTR entries for a couple things
+Add-DnsServerResourceRecordA -Name "router" -ZoneName "corp.fakecomputermusic.com" -IPv4Address "10.10.10.1"
+Add-DnsServerResourceRecordPtr -Name "1" -ZoneName "10.10.10.in-addr.arpa" -AllowUpdateAny -PtrDomainName "router.corp.fakecomputermusic.com"
+
+Add-DnsServerResourceRecordA -Name "esxi" -ZoneName "esxi.fakecomputermusic.com" -IPv4Address "10.10.10.2"
+Add-DnsServerResourceRecordPtr -Name "2" -ZoneName "10.10.10.in-addr.arpa" -AllowUpdateAny -PtrDomainName "esxi.corp.fakecomputermusic.com"
+ 
+Add-DnsServerResourceRecordA -Name "web" -ZoneName "corp.fakecomputermusic.com" -IPv4Address "10.10.10.8"
+Add-DnsServerResourceRecordPtr -Name "8" -ZoneName "10.10.10.in-addr.arpa" -AllowUpdateAny -PtrDomainName "web.corp.fakecomputermusic.com"
+ 
+# Create a user named fred
+New-ADUser -Name "Fred" -SamAccountName "fred" -Path "CN=Users,DC=corp,DC=fakecomputermusic,DC=com" -AccountPassword(Read-Host -AsSecureString "Type Password for User") -Enabled $true
+Set-ADAccountPassword -Identity 'CN=fred,CN=Users,DC=corp,DC=fakecomputermusic,DC=com' -Reset -NewPassword (ConvertTo-SecureString -AsPlainText "securestpasswordever" -Force)
+
+# Create a group called "ESX Admins" and add fred to that group
+# After this, fred can login/manage the esxi web ui
+New-ADGroup -name "ESX Admins" -Path "CN=Users,DC=corp,dc=fakecomputermusic,dc=com" -Groupscope Global
+Add-ADGroupMember -Identity "ESX Admins" -Members fred
